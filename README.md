@@ -13,10 +13,12 @@ A modern Flutter todo application with category-based task management and progre
 ## Screenshots
 
 ### Home Screen
-![Home Screen](screenshots/home_screen.png)
+<img width="200" alt="Home Screen" src="https://github.com/user-attachments/assets/19a1defe-caa7-4e67-a967-9391c1aa19a6" />
+
 
 ### Add Todo Screen
-![Add Todo Screen](screenshots/add_todo_screen.png)
+<img width="200" alt="Add Todo Screen" src="https://github.com/user-attachments/assets/33453ead-c2f2-4d7c-8b22-b7224679a61b" />
+
 
 ## Tech Stack
 
