@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/constants/category/category.dart';
 import 'package:todo_app/main.dart';
+import 'package:todo_app/provider/filter_provider.dart';
 import 'package:todo_app/provider/todo_provider.dart';
 import 'package:todo_app/widgets/todo_item.dart';
 
@@ -18,7 +20,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    List<Todo> todos = ref.watch(todoProvider);
+    List<Todo> todos = ref.watch(filteredTodoProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -132,9 +134,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.only(bottom: mq.height * 0.007),
-            itemCount: Categories.values.length,
+            itemCount: Category.values.length,
             itemBuilder: (context, index) =>
-                CategoryContainer(category: Categories.values[index]),
+                CategoryContainer(category: Category.values[index]),
           ),
         ),
       ],

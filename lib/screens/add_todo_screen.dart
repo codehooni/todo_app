@@ -8,6 +8,8 @@ import 'package:todo_app/provider/todo_provider.dart';
 import 'package:todo_app/utils/date_utils.dart' as date_utils;
 import 'package:uuid/uuid.dart';
 
+import '../constants/category/category.dart';
+import '../constants/priority/priority.dart';
 import '../main.dart';
 
 class AddTodoScreen extends ConsumerStatefulWidget {
@@ -23,7 +25,7 @@ class _AddTodoScreenState extends ConsumerState<AddTodoScreen> {
   final TextEditingController controller = TextEditingController();
 
   // Category
-  Categories selectedCategory = Categories.work;
+  Category selectedCategory = Category.work;
 
   // Priority
   Priority priority = Priority.low;
@@ -317,10 +319,10 @@ class _AddTodoScreenState extends ConsumerState<AddTodoScreen> {
               ),
               SizedBox(height: mq.height * 0.02),
 
-              _buildCategoryItem(Categories.work),
-              _buildCategoryItem(Categories.personal),
-              _buildCategoryItem(Categories.business),
-              _buildCategoryItem(Categories.study),
+              _buildCategoryItem(Category.work),
+              _buildCategoryItem(Category.personal),
+              _buildCategoryItem(Category.business),
+              _buildCategoryItem(Category.study),
             ],
           ),
         );
@@ -328,7 +330,7 @@ class _AddTodoScreenState extends ConsumerState<AddTodoScreen> {
     );
   }
 
-  _buildCategoryItem(Categories category) {
+  _buildCategoryItem(Category category) {
     return GestureDetector(
       onTap: () {
         setState(() {

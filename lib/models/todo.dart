@@ -1,54 +1,25 @@
-import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 
-enum Priority {
-  low(value: 1, label: '낮음', color: Colors.blue),
-  medium(value: 2, label: '중간', color: Colors.yellow),
-  high(value: 3, label: '높음', color: Colors.orange),
-  urgent(value: 4, label: '긴금', color: Colors.red);
+import '../constants/category/category.dart';
+import '../constants/priority/priority.dart';
 
-  final int value;
-  final String label;
-  final Color color;
+part 'todo.g.dart';
 
-  const Priority({
-    required this.value,
-    required this.label,
-    required this.color,
-  });
-}
-
-enum Categories {
-  work(label: 'work', iconData: Icons.work_outline, color: Colors.blue),
-  personal(
-    label: 'personal',
-    iconData: Icons.person_outline,
-    color: Colors.green,
-  ),
-  business(
-    label: 'business',
-    iconData: Icons.business_center,
-    color: Colors.orange,
-  ),
-  study(label: 'study', iconData: Icons.school_outlined, color: Colors.purple);
-
-  final String label;
-  final IconData iconData;
-  final Color color;
-
-  const Categories({
-    required this.label,
-    required this.iconData,
-    required this.color,
-  });
-}
-
+@HiveType(typeId: 0)
 class Todo {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final String title;
+  @HiveField(2)
   final bool isCompleted;
+  @HiveField(3)
   final Priority priority;
-  final Categories category;
+  @HiveField(4)
+  final Category category;
+  @HiveField(5)
   final DateTime endDate;
+  @HiveField(6)
   final DateTime createdAt;
 
   Todo({
@@ -66,7 +37,7 @@ class Todo {
     String? title,
     bool? isCompleted,
     Priority? priority,
-    Categories? category,
+    Category? category,
     DateTime? endDate,
     DateTime? createdAt,
   }) {

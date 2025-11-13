@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/provider/filter_provider.dart';
 import 'package:todo_app/provider/todo_provider.dart';
 
+import '../constants/category/category.dart';
 import '../main.dart';
-import '../models/todo.dart';
 
 class CategoryContainer extends ConsumerStatefulWidget {
-  final Categories category;
+  final Category category;
 
   const CategoryContainer({super.key, required this.category});
 
@@ -17,6 +18,9 @@ class CategoryContainer extends ConsumerStatefulWidget {
 class _CategoryContainerState extends ConsumerState<CategoryContainer> {
   @override
   Widget build(BuildContext context) {
+    // 선택된 Category 확인 변수
+    final selectedCategory = ref.watch(categoryProvider);
+
     // Task 분석
     final todos = ref
         .watch(todoProvider)
@@ -42,103 +46,112 @@ class _CategoryContainerState extends ConsumerState<CategoryContainer> {
       progressBarVerticalIconPadding = 0;
     }
 
-    return Container(
-      width: totalContainerWidth,
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-      margin: EdgeInsets.only(right: mq.width * 0.03),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(mq.width * 0.05),
-        color: Theme.of(context).colorScheme.surfaceContainer,
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.shadow.withAlpha(30),
-            offset: Offset(0.0, mq.height * 0.004),
-            spreadRadius: 0.1,
-            blurRadius: mq.height * 0.004,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: mq.height * 0.033),
-          // count of tasks
-          Text(
-            '$countTasks tasks',
-            style: TextStyle(
-              fontSize: mq.width * 0.03,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+    return GestureDetector(
+      onTap: () {
+        ref
+            .read(categoryProvider.notifier)
+            .selectCategory(
+              selectedCategory != widget.category ? widget.category : null,
+            );
+      },
+      child: Container(
+        width: totalContainerWidth,
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+        margin: EdgeInsets.only(right: mq.width * 0.03),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(mq.width * 0.05),
+          color: Theme.of(context).colorScheme.surfaceContainer,
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.shadow.withAlpha(30),
+              offset: Offset(0.0, mq.height * 0.004),
+              spreadRadius: 0.1,
+              blurRadius: mq.height * 0.004,
             ),
-          ),
-          SizedBox(height: mq.height * 0.005),
-          // Category Name
-          Text(
-            widget.category.label,
-            style: TextStyle(
-              fontSize: mq.width * 0.048,
-              color: Theme.of(context).colorScheme.onSurface,
-              fontWeight: FontWeight.bold,
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: mq.height * 0.033),
+            // count of tasks
+            Text(
+              '$countTasks tasks',
+              style: TextStyle(
+                fontSize: mq.width * 0.03,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
-          ),
-          Spacer(),
+            SizedBox(height: mq.height * 0.005),
+            // Category Name
+            Text(
+              widget.category.label,
+              style: TextStyle(
+                fontSize: mq.width * 0.048,
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Spacer(),
 
-          // Progress bar
-          SizedBox(
-            width: double.infinity,
-            height: progressBarHeight,
-            child: Stack(
-              alignment: AlignmentGeometry.bottomLeft,
-              children: [
-                // 어두운 부분
-                Container(
-                  width: progressBarWidth,
-                  height: progressBarHeight / 2,
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurfaceVariant.withAlpha(50),
-                    borderRadius: BorderRadius.circular(mq.width * 0.015),
-                  ),
-                ),
-
-                // 프로그래스 상태 색칠
-                Container(
-                  width: progressBarWidth * percent,
-                  height: progressBarHeight / 2,
-                  decoration: BoxDecoration(
-                    color: widget.category.color,
-                    borderRadius: BorderRadius.circular(mq.width * 0.015),
-                    boxShadow: [
-                      BoxShadow(
-                        color: widget.category.color.withAlpha(90),
-                        offset: Offset(0.0, mq.height * 0.005),
-                        spreadRadius: 0.1,
-                        blurRadius: mq.height * 0.005,
-                      ),
-                    ],
-                  ),
-                ),
-
-                // 위로 튀어나온 아이콘
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: progressBarVerticalIconPadding,
-                  ),
-                  child: Container(
-                    width: progressBarVerticalIconWidth,
-                    height: progressBarHeight,
+            // Progress bar
+            SizedBox(
+              width: double.infinity,
+              height: progressBarHeight,
+              child: Stack(
+                alignment: AlignmentGeometry.bottomLeft,
+                children: [
+                  // 어두운 부분
+                  Container(
+                    width: progressBarWidth,
+                    height: progressBarHeight / 2,
                     decoration: BoxDecoration(
-                      color: widget.category.color,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurfaceVariant.withAlpha(50),
                       borderRadius: BorderRadius.circular(mq.width * 0.015),
                     ),
                   ),
-                ),
-              ],
+
+                  // 프로그래스 상태 색칠
+                  Container(
+                    width: progressBarWidth * percent,
+                    height: progressBarHeight / 2,
+                    decoration: BoxDecoration(
+                      color: widget.category.color,
+                      borderRadius: BorderRadius.circular(mq.width * 0.015),
+                      boxShadow: [
+                        BoxShadow(
+                          color: widget.category.color.withAlpha(90),
+                          offset: Offset(0.0, mq.height * 0.005),
+                          spreadRadius: 0.1,
+                          blurRadius: mq.height * 0.005,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // 위로 튀어나온 아이콘
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: progressBarVerticalIconPadding,
+                    ),
+                    child: Container(
+                      width: progressBarVerticalIconWidth,
+                      height: progressBarHeight,
+                      decoration: BoxDecoration(
+                        color: widget.category.color,
+                        borderRadius: BorderRadius.circular(mq.width * 0.015),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: mq.height * 0.016),
-        ],
+            SizedBox(height: mq.height * 0.016),
+          ],
+        ),
       ),
     );
   }
