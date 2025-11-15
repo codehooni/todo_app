@@ -8,9 +8,9 @@ import 'package:todo_app/provider/todo_provider.dart';
 import 'package:todo_app/utils/date_utils.dart' as date_utils;
 import 'package:uuid/uuid.dart';
 
-import '../constants/category/category.dart';
-import '../constants/priority/priority.dart';
-import '../main.dart';
+import '../../constants/category/category.dart';
+import '../../constants/priority/priority.dart';
+import '../../main.dart';
 
 class AddTodoScreen extends ConsumerStatefulWidget {
   const AddTodoScreen({super.key});

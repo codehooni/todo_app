@@ -1,14 +1,17 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/constants/category/category.dart';
 import 'package:todo_app/main.dart';
 import 'package:todo_app/provider/filter_provider.dart';
+import 'package:todo_app/provider/screen_provider.dart';
 import 'package:todo_app/provider/todo_provider.dart';
 import 'package:todo_app/widgets/todo_item.dart';
 
-import '../models/todo.dart';
-import '../widgets/category_container.dart';
+import '../../models/todo.dart';
+import '../../widgets/category_container.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -20,36 +23,27 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    List<Todo> todos = ref.watch(filteredTodoProvider);
+    final List<Todo> todos = ref.watch(filteredTodoProvider);
+    final isSideMenu = ref.watch(screenProvider);
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(mq.width * 0.1),
-              color: Theme.of(context).colorScheme.surface,
-            ),
-            child: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: mq.width * 0.06),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: mq.height * 0.015),
-                    _buildAppBar(),
-                    SizedBox(height: mq.height * 0.035),
-                    _buildTitle(),
-                    SizedBox(height: mq.height * 0.025),
-                    _buildCategory(),
-                    _buildTodos(todos, ref),
-                  ],
-                ),
-              ),
-            ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: mq.width * 0.06),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: mq.height * 0.015),
+              _buildAppBar(),
+              SizedBox(height: mq.height * 0.035),
+              _buildTitle(),
+              SizedBox(height: mq.height * 0.025),
+              _buildCategory(),
+              _buildTodos(todos, ref),
+            ],
           ),
-        ],
+        ),
       ),
       floatingActionButton: GestureDetector(
         onTap: () => context.go('/add'),
@@ -159,6 +153,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Row(
       children: [
         GestureDetector(
+          onTap: () {
+            ref.read(screenProvider.notifier).toggleShowSide();
+          },
           child: Icon(Icons.menu, color: iconColor, size: iconSize),
         ),
         Spacer(),
