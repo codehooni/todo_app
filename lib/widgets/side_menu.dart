@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:todo_app/main.dart';
 import 'package:todo_app/provider/screen_provider.dart';
 
+import 'my_line_chart.dart';
+
 class SideMenu extends ConsumerStatefulWidget {
   const SideMenu({super.key});
 
@@ -79,7 +81,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
               Spacer(),
 
               // Graph
-              _buildGraph(),
+              _buildGraph(context),
 
               // My State (Good, Bad)
               _buildMyState(context),
@@ -140,8 +142,8 @@ Widget _buildMyState(BuildContext context) {
   );
 }
 
-Widget _buildGraph() {
-  return SizedBox();
+Widget _buildGraph(BuildContext context) {
+  return MyLineChart();
 }
 
 Widget _buildMenu(BuildContext context, WidgetRef ref) {
@@ -155,7 +157,7 @@ Widget _buildMenu(BuildContext context, WidgetRef ref) {
         '/templates',
         ref,
       ),
-      _buildMenuItem(context, Icons.category, 'Categories', '/categories', ref),
+      // _buildMenuItem(context, Icons.category, 'Categories', '/categories', ref),
       _buildMenuItem(
         context,
         CupertinoIcons.chart_pie,

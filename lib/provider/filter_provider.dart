@@ -13,7 +13,7 @@ final categoryProvider = NotifierProvider<CategoryNotifier, Category?>(() {
 class CategoryNotifier extends Notifier<Category?> {
   @override
   Category? build() {
-    return Category.work;
+    return null;
   }
 
   void selectCategory(Category? category) {

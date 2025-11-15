@@ -18,24 +18,16 @@ class MainScreen extends ConsumerStatefulWidget {
 class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
-    final isShowSide = ref.watch(screenProvider);
-
     return Scaffold(
-      body: AnimatedContainer(
-        duration: Duration(milliseconds: 600),
-        curve: isShowSide ? Curves.easeOutQuart : Curves.easeInQuart,
-        color: isShowSide
-            ? Theme.of(context).colorScheme.inverseSurface
-            : Theme.of(context).colorScheme.shadow.withAlpha(60),
-        child: Stack(
-          children: [
-            // Side Menu
-            AnimationSideMenuHolder(sideMenu: SideMenu()),
+      backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+      body: Stack(
+        children: [
+          // Side Menu
+          AnimationSideMenuHolder(sideMenu: SideMenu()),
 
-            // Screens (Home, Analysis, ...)
-            AnimationScreensHolder(screen: widget.child),
-          ],
-        ),
+          // Screens (Home, Analysis, ...)
+          AnimationScreensHolder(screen: widget.child),
+        ],
       ),
     );
   }
