@@ -25,6 +25,8 @@ class _MyLineChartState extends ConsumerState<MyLineChart> {
   @override
   Widget build(BuildContext context) {
     final isSideMenu = ref.watch(screenProvider);
+    final minX = -0.1;
+    final maxX = originalData.length - 1 + 0.1;
     final minY = originalData.reduce((a, b) => a < b ? a : b);
     final maxY = originalData.reduce((a, b) => a > b ? a : b);
 
@@ -48,8 +50,12 @@ class _MyLineChartState extends ConsumerState<MyLineChart> {
                     blurRadius: mq.width * 0.02,
                     offset: Offset(0, mq.width * 0.02),
                   ),
+                  // preventCurveOverShooting: true,
+                  isStrokeCapRound: true,
                 ),
               ],
+              minX: minX,
+              maxX: maxX,
               minY: minY - 1,
               maxY: maxY + 1,
               titlesData: FlTitlesData(show: false),

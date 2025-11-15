@@ -15,16 +15,22 @@ final GoRouter goRouter = GoRouter(
         // Home
         GoRoute(
           path: '/',
-          builder: (context, state) => HomeScreen(),
+          pageBuilder: (context, state) =>
+              NoTransitionPage(child: HomeScreen()),
           routes: [
-            GoRoute(path: '/add', builder: (context, state) => AddTodoScreen()),
+            GoRoute(
+              path: '/add',
+              pageBuilder: (context, state) =>
+                  NoTransitionPage(child: AddTodoScreen()),
+            ),
           ],
         ),
 
         // Analysis
         GoRoute(
           path: '/analytics',
-          builder: (context, state) => AnalyticsScreen(),
+          pageBuilder: (context, state) =>
+              NoTransitionPage(child: AnalyticsScreen()),
         ),
       ],
     ),

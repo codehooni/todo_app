@@ -8,6 +8,7 @@ import 'package:todo_app/main.dart';
 import 'package:todo_app/provider/filter_provider.dart';
 import 'package:todo_app/provider/screen_provider.dart';
 import 'package:todo_app/provider/todo_provider.dart';
+import 'package:todo_app/widgets/animation/animation_spread.dart';
 import 'package:todo_app/widgets/todo_item.dart';
 
 import '../../models/todo.dart';
@@ -21,53 +22,69 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  bool isFAB = false;
   @override
   Widget build(BuildContext context) {
     final List<Todo> todos = ref.watch(filteredTodoProvider);
-    final isSideMenu = ref.watch(screenProvider);
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: mq.width * 0.06),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: mq.height * 0.015),
-              _buildAppBar(),
-              SizedBox(height: mq.height * 0.035),
-              _buildTitle(),
-              SizedBox(height: mq.height * 0.025),
-              _buildCategory(),
-              _buildTodos(todos, ref),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: GestureDetector(
-        onTap: () => context.go('/add'),
-        child: Container(
-          padding: EdgeInsets.all(mq.width * 0.04),
-          margin: EdgeInsets.only(right: mq.width * 0.025),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Theme.of(context).colorScheme.primary,
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.primary.withAlpha(100),
-                offset: Offset(0.0, mq.width * 0.015),
-                blurRadius: mq.width * 0.015,
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: mq.width * 0.06),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: mq.height * 0.015),
+                  _buildAppBar(),
+                  SizedBox(height: mq.height * 0.035),
+                  _buildTitle(),
+                  SizedBox(height: mq.height * 0.025),
+                  _buildCategory(),
+                  _buildTodos(todos, ref),
+                ],
               ),
-            ],
+            ),
           ),
-          child: Icon(
-            Icons.add,
-            size: mq.width * 0.06,
-            color: Theme.of(context).colorScheme.onPrimary,
+          floatingActionButton: GestureDetector(
+            onTap: () async {
+              setState(() {
+                isFAB = true;
+              });
+              await Future.delayed(Duration(milliseconds: 300));
+
+              if (!context.mounted) return;
+              await context.push('/add');
+              setState(() {
+                isFAB = false;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.all(mq.width * 0.04),
+              margin: EdgeInsets.only(right: mq.width * 0.025),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).colorScheme.primary,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.primary.withAlpha(100),
+                    offset: Offset(0.0, mq.width * 0.015),
+                    blurRadius: mq.width * 0.015,
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.add,
+                size: mq.width * 0.06,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+            ),
           ),
         ),
-      ),
+        AnimationSpread(isFAB: isFAB),
+      ],
     );
   }
 
