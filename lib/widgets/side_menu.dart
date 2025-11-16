@@ -150,14 +150,14 @@ Widget _buildMenu(BuildContext context, WidgetRef ref) {
   return Column(
     children: [
       _buildMenuItem(context, Icons.home, 'Home', '/', ref),
-      _buildMenuItem(
-        context,
-        Icons.bookmark_border_rounded,
-        'Templates',
-        '/templates',
-        ref,
-      ),
-      // _buildMenuItem(context, Icons.category, 'Categories', '/categories', ref),
+      // _buildMenuItem(
+      //   context,
+      //   Icons.bookmark_border_rounded,
+      //   'Templates',
+      //   '/templates',
+      //   ref,
+      // ),
+      _buildMenuItem(context, Icons.category, 'Categories', '/categories', ref),
       _buildMenuItem(
         context,
         CupertinoIcons.chart_pie,

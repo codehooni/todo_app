@@ -53,6 +53,9 @@ dependencies:
   # Drawing Chart
   fl_chart: ^1.1.1
 
+  # Slidable
+  flutter_slidable: ^4.0.3
+
 
 dev_dependencies:
   flutter_test:

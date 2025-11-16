@@ -1,5 +1,6 @@
-import 'dart:math';
+import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -23,6 +24,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool isFAB = false;
+
   @override
   Widget build(BuildContext context) {
     final List<Todo> todos = ref.watch(filteredTodoProvider);
@@ -110,13 +112,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               itemBuilder: (context, index) {
                 final todo = todos[index];
 
-                return Dismissible(
-                  key: ValueKey(todo.id),
-                  onDismissed: (DismissDirection direction) {
-                    ref.read(todoProvider.notifier).removeTodo(todo.id);
-                  },
-                  child: TodoItem(todo: todo),
-                );
+                return TodoItem(todo: todo);
               },
             ),
           ),
