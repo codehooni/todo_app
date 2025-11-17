@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/main.dart';
 import 'package:todo_app/provider/screen_provider.dart';
+import 'package:todo_app/provider/theme_provider.dart';
 
 import 'my_line_chart.dart';
 
@@ -50,13 +51,18 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     strokeWidth: mq.width * 0.009,
                     size: mq.width * 0.26,
                   ),
-                  CircleAvatar(
-                    radius: mq.width * 0.105,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(mq.width * 0.5),
-                      child: Image.asset(
-                        'assets/images/profile.png',
-                        fit: BoxFit.cover,
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(themeProvider.notifier).toggleTheme();
+                    },
+                    child: CircleAvatar(
+                      radius: mq.width * 0.105,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(mq.width * 0.5),
+                        child: Image.asset(
+                          'assets/images/profile.png',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),

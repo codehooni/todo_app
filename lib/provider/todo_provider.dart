@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo_app/service/database_service.dart';
+import 'package:todo_app/service/todo_database_service.dart';
 
 import '../models/todo.dart';
 
@@ -8,7 +8,7 @@ final todoProvider = NotifierProvider<TodoNotifier, List<Todo>>(() {
 });
 
 class TodoNotifier extends Notifier<List<Todo>> {
-  final DatabaseService databaseService = DatabaseService();
+  final TodoDatabaseService databaseService = TodoDatabaseService();
 
   @override
   List<Todo> build() {

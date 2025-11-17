@@ -26,13 +26,21 @@ class _TodoItemState extends ConsumerState<TodoItem> {
   Color? _checkColor;
 
   @override
-  void initState() {
-    super.initState();
-    _checkColor = widget.todo.isCompleted ? Colors.grey : null;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Theme 변경 시 색상 업데이트
+    if (widget.todo.isCompleted && _checkColor != null) {
+      _checkColor = Theme.of(context).colorScheme.surfaceContainerHigh;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // 첫 build 시에만 초기화
+    _checkColor ??= widget.todo.isCompleted
+        ? Theme.of(context).colorScheme.surfaceContainerHigh
+        : null;
+
     return Dismissible(
       key: Key(widget.todo.id),
       movementDuration: Duration(milliseconds: 300),
@@ -169,7 +177,9 @@ class _TodoItemState extends ConsumerState<TodoItem> {
           Future.delayed(Duration(milliseconds: 150), () {
             if (mounted) {
               setState(() {
-                _checkColor = Colors.grey;
+                _checkColor = Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHigh;
               });
             }
           });
@@ -180,7 +190,9 @@ class _TodoItemState extends ConsumerState<TodoItem> {
           Future.delayed(Duration(milliseconds: 150), () {
             if (mounted) {
               setState(() {
-                _checkColor = Colors.grey;
+                _checkColor = Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHigh;
               });
             }
           });
