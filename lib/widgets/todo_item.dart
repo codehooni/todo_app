@@ -130,16 +130,16 @@ class _TodoItemState extends ConsumerState<TodoItem> {
       onDismissed: (_) {
         ref.read(todoProvider.notifier).removeTodo(widget.todo.id);
       },
-      child: Padding(
-        padding: EdgeInsets.only(bottom: mq.height * 0.01),
-        child: Container(
+      child: Container(
+        margin: EdgeInsets.only(bottom: mq.height * 0.01),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainer,
+          borderRadius: BorderRadius.circular(mq.height * 0.025),
+        ),
+        child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: mq.width * 0.05,
             vertical: mq.height * 0.025,
-          ),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(mq.height * 0.025),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,

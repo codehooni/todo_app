@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool isFAB = false;
+  bool showSpread = true;
 
   // Animation
   final List<bool> _visibles = List.generate(5, (index) => false);
@@ -53,6 +55,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       await Future.delayed(Duration(milliseconds: i == 0 ? 100 : 100));
       if (mounted) setState(() => _visibles[i] = true);
     }
+  }
+
+  // Reorder
+  Widget proxyDecorator(Widget child, int index, Animation<double> animation) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (BuildContext context, Widget? child) {
+        final double animValue = Curves.easeInOut.transform(animation.value);
+        final double scale = lerpDouble(1, 1.02, animValue)!;
+        return Transform.scale(
+          scale: scale,
+          child: child,
+        );
+      },
+      child: child,
+    );
   }
 
   @override
@@ -92,13 +110,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onTap: () async {
                 setState(() {
                   isFAB = true;
+                  showSpread = true;
                 });
                 await Future.delayed(Duration(milliseconds: 300));
 
                 if (!context.mounted) return;
-                await context.push('/add');
+                final result = await context.push('/add');
                 setState(() {
                   isFAB = false;
+                  if (result == true) {
+                    showSpread = false;
+                  }
                 });
               },
               child: Container(
@@ -127,7 +149,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             _visibles[4],
           ),
         ),
-        AnimationSpread(isFAB: isFAB),
+        if (showSpread) AnimationSpread(isFAB: isFAB),
       ],
     );
   }
@@ -149,6 +171,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
         Expanded(
           child: ReorderableListView.builder(
+            proxyDecorator: proxyDecorator,
             onReorder: (int oldIndex, int newIndex) {
               ref.read(todoProvider.notifier).reorderTodo(oldIndex, newIndex);
             },
