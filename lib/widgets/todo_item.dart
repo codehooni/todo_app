@@ -23,11 +23,20 @@ class _TodoItemState extends ConsumerState<TodoItem> {
   final Duration _deleteDelay = Duration(seconds: 2);
   Timer? _deleteTimer;
 
+  Color? _checkColor;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkColor = widget.todo.isCompleted ? Colors.grey : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dismissible(
       key: Key(widget.todo.id),
-      resizeDuration: Duration(seconds: 1),
+      movementDuration: Duration(milliseconds: 300),
+      resizeDuration: Duration(milliseconds: 200),
       direction: DismissDirection.endToStart,
       background: Container(),
       secondaryBackground: GestureDetector(
@@ -104,12 +113,14 @@ class _TodoItemState extends ConsumerState<TodoItem> {
         final shouldUndo = await completer.future;
 
         if (!shouldUndo) {
-          ref.read(todoProvider.notifier).removeTodo(widget.todo.id);
           return true;
         } else {
           _deleteTimer?.cancel();
           return false;
         }
+      },
+      onDismissed: (_) {
+        ref.read(todoProvider.notifier).removeTodo(widget.todo.id);
       },
       child: Padding(
         padding: EdgeInsets.only(bottom: mq.height * 0.01),
@@ -128,13 +139,17 @@ class _TodoItemState extends ConsumerState<TodoItem> {
             children: [
               _buildCheckContainer(context, ref),
               SizedBox(width: mq.width * 0.04),
-              Text(
-                widget.todo.title,
-                style: TextStyle(
-                  fontSize: mq.width * 0.04,
-                  decoration: widget.todo.isCompleted
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
+              Expanded(
+                child: Text(
+                  widget.todo.title,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: mq.width * 0.04,
+                    decoration: widget.todo.isCompleted
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                    overflow: TextOverflow.fade,
+                  ),
                 ),
               ),
             ],
@@ -147,13 +162,38 @@ class _TodoItemState extends ConsumerState<TodoItem> {
   Widget _buildCheckContainer(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
+        if (!widget.todo.isCompleted) {
+          setState(() {
+            _checkColor = widget.todo.category.color;
+          });
+          Future.delayed(Duration(milliseconds: 150), () {
+            if (mounted) {
+              setState(() {
+                _checkColor = Colors.grey;
+              });
+            }
+          });
+        } else {
+          setState(() {
+            _checkColor = widget.todo.category.color;
+          });
+          Future.delayed(Duration(milliseconds: 150), () {
+            if (mounted) {
+              setState(() {
+                _checkColor = Colors.grey;
+              });
+            }
+          });
+        }
+
         ref.read(todoProvider.notifier).toggleTodo(widget.todo.id);
       },
-      child: Container(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 150),
         width: mq.width * 0.06,
         height: mq.width * 0.06,
         decoration: widget.todo.isCompleted
-            ? BoxDecoration(shape: BoxShape.circle, color: Colors.grey)
+            ? BoxDecoration(shape: BoxShape.circle, color: _checkColor)
             : BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(

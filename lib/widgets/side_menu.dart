@@ -209,7 +209,7 @@ Widget _buildMenuItem(
 }
 
 // ShadowProgressIndicator
-class ShadowProgressIndicator extends StatelessWidget {
+class ShadowProgressIndicator extends ConsumerStatefulWidget {
   final double value;
   final Color backgroundColor;
   final Color color;
@@ -226,18 +226,87 @@ class ShadowProgressIndicator extends StatelessWidget {
   });
 
   @override
+  ConsumerState<ShadowProgressIndicator> createState() =>
+      _ShadowProgressIndicatorState();
+}
+
+class _ShadowProgressIndicatorState
+    extends ConsumerState<ShadowProgressIndicator>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  bool _previousSideMenuState = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 700),
+    );
+
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: widget.value,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+  }
+
+  @override
+  void didUpdateWidget(ShadowProgressIndicator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      // value 변경 시 애니메이션 업데이트
+      _animation = Tween<double>(begin: _animation.value, end: widget.value)
+          .animate(
+            CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+          );
+      _controller.forward(from: 0.0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: CustomPaint(
-        painter: _ShadowProgressPainter(
-          value: value,
-          backgroundColor: backgroundColor,
-          color: color,
-          strokeWidth: strokeWidth,
-        ),
-      ),
+    final isSideMenu = ref.watch(screenProvider);
+
+    if (isSideMenu && !_previousSideMenuState) {
+      Future.delayed(Duration(milliseconds: 600), () {
+        if (mounted && ref.read(screenProvider)) {
+          _controller.reset();
+          _controller.forward();
+        }
+      });
+    }
+    // 메뉴가 닫힐 때: progress reset
+    else if (!isSideMenu && !_previousSideMenuState) {
+      Future.delayed(Duration(milliseconds: 200), () {
+        if (mounted) {
+          _controller.reset();
+        }
+      });
+    }
+
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return SizedBox(
+          width: widget.size,
+          height: widget.size,
+          child: CustomPaint(
+            painter: _ShadowProgressPainter(
+              value: _animation.value,
+              backgroundColor: widget.backgroundColor,
+              color: widget.color,
+              strokeWidth: widget.strokeWidth,
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todo_app/service/database_service.dart';
 
 import '../models/todo.dart';
 
@@ -8,41 +8,54 @@ final todoProvider = NotifierProvider<TodoNotifier, List<Todo>>(() {
 });
 
 class TodoNotifier extends Notifier<List<Todo>> {
-  final Box<Todo> _box = Hive.box<Todo>('todos');
+  final DatabaseService databaseService = DatabaseService();
 
   @override
   List<Todo> build() {
-    return _box.values.toList();
+    return databaseService.getTodos();
   }
 
   void addTodo(Todo todo) {
-    _box.put(todo.id, todo);
     state = [...state, todo];
+    databaseService.saveData(state);
   }
 
   void toggleTodo(String todoId) {
     state = state.map((t) {
       if (t.id == todoId) {
-        final updated = t.copyWith(isCompleted: !t.isCompleted);
-        _box.put(todoId, updated);
-        return updated;
+        return t.copyWith(isCompleted: !t.isCompleted);
       }
       return t;
     }).toList();
+    databaseService.saveData(state);
   }
 
   void removeTodo(String todoId) {
-    _box.delete(todoId);
     state = state.where((t) => t.id != todoId).toList();
+    databaseService.saveData(state);
   }
 
   void editTodo(String todoId, Todo newTodo) {
-    _box.put(todoId, newTodo);
     state = state.map((t) {
       if (t.id == todoId) {
         return newTodo;
       }
       return t;
     }).toList();
+    databaseService.saveData(state);
+  }
+
+  void reorderTodo(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex--;
+    }
+
+    final todo = state.removeAt(oldIndex);
+
+    state.insert(newIndex, todo);
+
+    databaseService.saveData(state);
+
+    state = [...state];
   }
 }

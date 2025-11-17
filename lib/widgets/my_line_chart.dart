@@ -22,9 +22,25 @@ class _MyLineChartState extends ConsumerState<MyLineChart> {
     );
   }
 
+  bool _showChart = false;
+  bool _previousSideMenuState = false;
+
   @override
   Widget build(BuildContext context) {
     final isSideMenu = ref.watch(screenProvider);
+
+    if (isSideMenu && !_previousSideMenuState) {
+      _showChart = false; // 처음엔 가려진 상태
+      if (mounted && ref.read(screenProvider)) {
+        setState(() {
+          _showChart = true; // 600ms 후 드러남
+        });
+      }
+    } else if (!isSideMenu && _previousSideMenuState) {
+      _showChart = false; // 메뉴 닫히면 즉시 가림
+    }
+    _previousSideMenuState = isSideMenu;
+
     final minX = -0.1;
     final maxX = originalData.length - 1 + 0.1;
     final minY = originalData.reduce((a, b) => a < b ? a : b);
@@ -68,7 +84,7 @@ class _MyLineChartState extends ConsumerState<MyLineChart> {
           Align(
             alignment: Alignment.centerRight,
             child: AnimatedContainer(
-              width: isSideMenu ? 0 : mq.width,
+              width: _showChart ? 0 : mq.width,
               duration: Duration(milliseconds: 1300),
               curve: Curves.easeInOutCubic,
               color: Theme.of(context).colorScheme.inverseSurface,

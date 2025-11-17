@@ -51,4 +51,7 @@ class Todo {
       createdAt: createdAt ?? this.createdAt,
     );
   }
+
+  @override
+  String toString() => 'Todo(title: $title)';
 }

@@ -34,7 +34,6 @@ class _AddTodoScreenState extends ConsumerState<AddTodoScreen> {
   DateTime? endDate;
 
   // Animation
-  static final _tween = Tween<double>(begin: 0, end: 1);
   final List<bool> _visibles = List.generate(5, (index) => false);
 
   Widget _buildAnimation(Widget child, bool visible) {
@@ -43,7 +42,7 @@ class _AddTodoScreenState extends ConsumerState<AddTodoScreen> {
       duration: Duration(milliseconds: 500),
       curve: Curves.easeOut,
       child: AnimatedSlide(
-        offset: visible ? Offset.zero : Offset(0, -0.03),
+        offset: visible ? Offset.zero : Offset(0, -0.05),
         duration: Duration(milliseconds: 500),
         curve: Curves.easeOut,
         child: child,
@@ -111,6 +110,7 @@ class _AddTodoScreenState extends ConsumerState<AddTodoScreen> {
                   _buildAnimation(
                     TextFormField(
                       controller: controller,
+                      maxLength: 30,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter title';

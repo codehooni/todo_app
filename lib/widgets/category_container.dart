@@ -16,6 +16,30 @@ class CategoryContainer extends ConsumerStatefulWidget {
 }
 
 class _CategoryContainerState extends ConsumerState<CategoryContainer> {
+  Duration animationTime = Duration(milliseconds: 700);
+
+  // 처음 빌드되면 에니메이션을 0부터 시작하며 보여주도록
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _initialized = true;
+        });
+        Future.delayed(Duration(milliseconds: 800), () {
+          if (mounted) {
+            setState(() {
+              animationTime = Duration(milliseconds: 300);
+            });
+          }
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // 선택된 Category 확인 변수
@@ -32,6 +56,8 @@ class _CategoryContainerState extends ConsumerState<CategoryContainer> {
     );
     final double percent = countTasks != 0 ? completedTasks / countTasks : 0;
 
+    final double displayPercent = _initialized ? percent : 0.0;
+
     // 크기를 위한 변수들
     final totalContainerWidth = mq.width * 0.45;
     final horizontalPadding = mq.width * 0.035;
@@ -40,7 +66,7 @@ class _CategoryContainerState extends ConsumerState<CategoryContainer> {
 
     final progressBarVerticalIconWidth = progressBarHeight / 2;
     double progressBarVerticalIconPadding =
-        progressBarWidth * percent - progressBarVerticalIconWidth;
+        progressBarWidth * displayPercent - progressBarVerticalIconWidth;
     // padding이 0보다 작아지면 0
     if (progressBarVerticalIconPadding < 0) {
       progressBarVerticalIconPadding = 0;
@@ -115,8 +141,10 @@ class _CategoryContainerState extends ConsumerState<CategoryContainer> {
                   ),
 
                   // 프로그래스 상태 색칠
-                  Container(
-                    width: progressBarWidth * percent,
+                  AnimatedContainer(
+                    duration: animationTime,
+                    curve: Curves.easeInOut,
+                    width: progressBarWidth * displayPercent,
                     height: progressBarHeight / 2,
                     decoration: BoxDecoration(
                       color: widget.category.color,
@@ -133,7 +161,9 @@ class _CategoryContainerState extends ConsumerState<CategoryContainer> {
                   ),
 
                   // 위로 튀어나온 아이콘
-                  Padding(
+                  AnimatedPadding(
+                    duration: animationTime,
+                    curve: Curves.easeInOut,
                     padding: EdgeInsets.only(
                       left: progressBarVerticalIconPadding,
                     ),

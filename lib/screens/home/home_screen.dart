@@ -25,6 +25,36 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool isFAB = false;
 
+  // Animation
+  final List<bool> _visibles = List.generate(5, (index) => false);
+
+  Widget _buildAnimation(Widget child, bool visible) {
+    return AnimatedOpacity(
+      opacity: visible ? 1.0 : 0.0,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeOut,
+      child: AnimatedSlide(
+        offset: visible ? Offset.zero : Offset(0, -0.05),
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeOut,
+        child: child,
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _startAnimations();
+  }
+
+  void _startAnimations() async {
+    for (int i = 0; i < _visibles.length; i++) {
+      await Future.delayed(Duration(milliseconds: i == 0 ? 100 : 100));
+      if (mounted) setState(() => _visibles[i] = true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Todo> todos = ref.watch(filteredTodoProvider);
@@ -40,49 +70,61 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: mq.height * 0.015),
-                  _buildAppBar(),
+                  _buildAnimation(_buildAppBar(), _visibles[0]),
+
                   SizedBox(height: mq.height * 0.035),
-                  _buildTitle(),
+                  _buildAnimation(_buildTitle(), _visibles[1]),
                   SizedBox(height: mq.height * 0.025),
-                  _buildCategory(),
-                  _buildTodos(todos, ref),
+                  _buildAnimation(_buildCategory(), _visibles[2]),
+
+                  Expanded(
+                    child: _buildAnimation(
+                      _buildTodos(todos, ref),
+                      _visibles[3],
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-          floatingActionButton: GestureDetector(
-            onTap: () async {
-              setState(() {
-                isFAB = true;
-              });
-              await Future.delayed(Duration(milliseconds: 300));
+          floatingActionButton: _buildAnimation(
+            GestureDetector(
+              onTap: () async {
+                setState(() {
+                  isFAB = true;
+                });
+                await Future.delayed(Duration(milliseconds: 300));
 
-              if (!context.mounted) return;
-              await context.push('/add');
-              setState(() {
-                isFAB = false;
-              });
-            },
-            child: Container(
-              padding: EdgeInsets.all(mq.width * 0.04),
-              margin: EdgeInsets.only(right: mq.width * 0.025),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Theme.of(context).colorScheme.primary,
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).colorScheme.primary.withAlpha(100),
-                    offset: Offset(0.0, mq.width * 0.015),
-                    blurRadius: mq.width * 0.015,
-                  ),
-                ],
-              ),
-              child: Icon(
-                Icons.add,
-                size: mq.width * 0.06,
-                color: Theme.of(context).colorScheme.onPrimary,
+                if (!context.mounted) return;
+                await context.push('/add');
+                setState(() {
+                  isFAB = false;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.all(mq.width * 0.04),
+                margin: EdgeInsets.only(right: mq.width * 0.025),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).colorScheme.primary,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withAlpha(100),
+                      offset: Offset(0.0, mq.width * 0.015),
+                      blurRadius: mq.width * 0.015,
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.add,
+                  size: mq.width * 0.06,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
             ),
+            _visibles[4],
           ),
         ),
         AnimationSpread(isFAB: isFAB),
@@ -91,33 +133,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildTodos(List<Todo> todos, WidgetRef ref) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: mq.height * 0.03),
-          Text(
-            'TODAY\'S TASKS',
-            style: TextStyle(
-              fontSize: mq.width * 0.033,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: mq.height * 0.03),
+        Text(
+          'TODAY\'S TASKS',
+          style: TextStyle(
+            fontSize: mq.width * 0.033,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          SizedBox(height: mq.height * 0.02),
+        ),
+        SizedBox(height: mq.height * 0.02),
 
-          Expanded(
-            child: ListView.builder(
-              itemCount: todos.length,
-              itemBuilder: (context, index) {
-                final todo = todos[index];
+        Expanded(
+          child: ReorderableListView.builder(
+            onReorder: (int oldIndex, int newIndex) {
+              ref.read(todoProvider.notifier).reorderTodo(oldIndex, newIndex);
+            },
+            itemCount: todos.length,
+            itemBuilder: (context, index) {
+              final todo = todos[index];
 
-                return TodoItem(todo: todo);
-              },
-            ),
+              return TodoItem(key: Key(todo.id), todo: todo);
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
