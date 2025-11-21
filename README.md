@@ -22,7 +22,7 @@ A modern Flutter todo application with category-based task management, smooth an
       <td align="center">
         <h3>Demo Video</h3>
         <!-- 여기에 데모 영상 URL을 넣으세요 -->
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/gHPb-ydLdWA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        [![Video](https://img.youtube.com/vi/gHPb-ydLdWA/0.jpg)](https://youtube.com/shorts/gHPb-ydLdWA?feature=share)
       </td>
       <td align="center">
         <h3>Home Screen</h3>
