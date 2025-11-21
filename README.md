@@ -5,10 +5,9 @@
 ## 🎬 데모 영상
 
 <div align="center">
-  <a href="https://youtube.com/shorts/gHPb-ydLdWA?feature=share">
-    <img src="https://img.youtube.com/vi/gHPb-ydLdWA/maxresdefault.jpg" alt="Todo App Demo Video" width="600">
-  </a>
-  <p><em>👆 클릭하여 YouTube에서 시청하기</em></p>
+
+https://github.com/user-attachments/assets/213c547a-2f76-4039-9741-381c7a404066
+
 </div>
 
 ## 📱 스크린샷
@@ -202,5 +201,4 @@ final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>
 
 ---
 
-**Made with ❤️ us
-ing Flutter**
+**Made with ❤️ using Flutter**
