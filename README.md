@@ -2,11 +2,20 @@
 
 카테고리 기반 할일 관리와 부드러운 애니메이션을 제공하는 Flutter Todo 애플리케이션입니다.
 
+## 🎬 데모 영상
+
+<div align="center">
+  <a href="https://youtube.com/shorts/gHPb-ydLdWA?feature=share">
+    <img src="https://img.youtube.com/vi/gHPb-ydLdWA/maxresdefault.jpg" alt="Todo App Demo Video" width="600">
+  </a>
+  <p><em>👆 클릭하여 YouTube에서 시청하기</em></p>
+</div>
+
 ## 📱 스크린샷
 
-| 🎬 Demo Video | 🏠 Home Screen | ➕ Add Todo Screen |
+| 🏠 Home Screen | ➕ Add Todo Screen | 📊 Statistics |
 |:---:|:---:|:---:|
-| [![Video](https://img.youtube.com/vi/gHPb-ydLdWA/0.jpg)](https://youtube.com/shorts/gHPb-ydLdWA?feature=share) | <img width="250" alt="Home Screen" src="https://github.com/user-attachments/assets/19a1defe-caa7-4e67-a967-9391c1aa19a6" /> | <img width="250" alt="Add Todo Screen" src="https://github.com/user-attachments/assets/33453ead-c2f2-4d7c-8b22-b7224679a61b" /> |
+| <img width="280" alt="Home Screen" src="https://github.com/user-attachments/assets/19a1defe-caa7-4e67-a967-9391c1aa19a6" /> | <img width="280" alt="Add Todo Screen" src="https://github.com/user-attachments/assets/33453ead-c2f2-4d7c-8b22-b7224679a61b" /> | <img width="280" alt="Statistics" src="YOUR_STATISTICS_SCREENSHOT_HERE" /> |
 
 ## ✨ 주요 기능
 
