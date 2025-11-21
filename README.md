@@ -12,9 +12,9 @@ https://github.com/user-attachments/assets/213c547a-2f76-4039-9741-381c7a404066
 
 ## 📱 스크린샷
 
-| 🏠 Home Screen | ➕ Add Todo Screen | 📊 Statistics |
-|:---:|:---:|:---:|
-| <img width="280" alt="Home Screen" src="https://github.com/user-attachments/assets/19a1defe-caa7-4e67-a967-9391c1aa19a6" /> | <img width="280" alt="Add Todo Screen" src="https://github.com/user-attachments/assets/33453ead-c2f2-4d7c-8b22-b7224679a61b" /> | <img width="280" alt="Statistics" src="YOUR_STATISTICS_SCREENSHOT_HERE" /> |
+| 🏠 Home Screen | ➕ Add Todo Screen |
+|:---:|:---:|
+| <img width="280" alt="Home Screen" src="https://github.com/user-attachments/assets/19a1defe-caa7-4e67-a967-9391c1aa19a6" /> | <img width="280" alt="Add Todo Screen" src="https://github.com/user-attachments/assets/33453ead-c2f2-4d7c-8b22-b7224679a61b" /> |
 
 ## ✨ 주요 기능
 
